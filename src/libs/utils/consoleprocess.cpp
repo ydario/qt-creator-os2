@@ -167,6 +167,10 @@ TerminalCommand ConsoleProcess::defaultTerminalEmulator()
             else
                 defaultTerm = {"/usr/X11/bin/xterm", "", "-e"};
 
+        } else if (HostOsInfo::isOs2Host()) {
+            const QString terminalEmulator =
+                            QString::fromLocal8Bit(qgetenv("COMSPEC"));
+            defaultTerm = {terminalEmulator, "", ""};
         } else if (HostOsInfo::isAnyUnixHost()) {
             defaultTerm = {"xterm", "", "-e"};
             const Environment env = Environment::systemEnvironment();
@@ -364,7 +368,7 @@ void ConsoleProcess::setAbortOnMetaChars(bool abort)
 
 qint64 ConsoleProcess::applicationMainThreadID() const
 {
-    if (HostOsInfo::isWindowsHost())
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host())
         return d->m_appMainThreadId;
     return -1;
 }

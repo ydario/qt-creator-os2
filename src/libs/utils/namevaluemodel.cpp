@@ -225,7 +225,7 @@ bool NameValueModel::setData(const QModelIndex &index, const QVariant &value, in
 
     if (index.column() == 0) {
         //fail if a variable with the same name already exists
-        const QString &newName = HostOsInfo::isWindowsHost() ? value.toString().toUpper()
+        const QString &newName = HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host() ? value.toString().toUpper()
                                                              : value.toString();
         if (newName.isEmpty() || newName.contains('='))
             return false;
@@ -420,7 +420,8 @@ void NameValueModel::setUserChanges(const NameValueItems &items)
         name = name.trimmed();
         if (name.startsWith("export "))
             name = name.mid(7).trimmed();
-        if (d->m_baseNameValueDictionary.osType() == OsTypeWindows) {
+        if (d->m_baseNameValueDictionary.osType() == OsTypeWindows ||
+            d->m_baseNameValueDictionary.osType() == OsTypeOs2) {
             // NameValueDictionary variable names are case-insensitive under windows, but we still
             // want to preserve the case of pre-existing variables.
             auto it = d->m_baseNameValueDictionary.constFind(name);

@@ -31,7 +31,7 @@
 
 #include <QString>
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
 #define QTC_HOST_EXE_SUFFIX QTC_WIN_EXE_SUFFIX
 #else
 #define QTC_HOST_EXE_SUFFIX ""
@@ -46,6 +46,8 @@ public:
     {
 #if defined(Q_OS_WIN)
         return OsTypeWindows;
+#elif defined(Q_OS_OS2)
+        return OsTypeOs2;
 #elif defined(Q_OS_LINUX)
         return OsTypeLinux;
 #elif defined(Q_OS_MAC)
@@ -62,6 +64,7 @@ public:
     static HostArchitecture hostArchitecture();
 
     static constexpr bool isWindowsHost() { return hostOs() == OsTypeWindows; }
+    static constexpr bool isOs2Host() { return hostOs() == OsTypeOs2; }
     static constexpr bool isLinuxHost() { return hostOs() == OsTypeLinux; }
     static constexpr bool isMacHost() { return hostOs() == OsTypeMac; }
     static constexpr bool isAnyUnixHost()

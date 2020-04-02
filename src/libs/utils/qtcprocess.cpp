@@ -530,7 +530,7 @@ QStringList QtcProcess::splitArgs(const QString &args, OsType osType,
                                   bool abortOnMeta, QtcProcess::SplitError *err,
                                   const Environment *env, const QString *pwd)
 {
-    if (osType == OsTypeWindows)
+    if (osType == OsTypeWindows || osType == OsTypeOs2)
         return splitArgsWin(args, abortOnMeta, err, env, pwd);
     else
         return splitArgsUnix(args, abortOnMeta, err, env, pwd);
@@ -538,6 +538,17 @@ QStringList QtcProcess::splitArgs(const QString &args, OsType osType,
 
 QString QtcProcess::quoteArgUnix(const QString &arg)
 {
+#ifdef	Q_OS_OS2
+    if (!arg.length())
+        return QString::fromLatin1("\"\"");
+
+    QString ret(arg);
+    if (hasSpecialCharsUnix(ret)) {
+        ret.replace(QLatin1Char('\"'), QLatin1String("\\\""));
+        ret.prepend(QLatin1Char('\"'));
+        ret.append(QLatin1Char('\"'));
+    }
+#else
     if (!arg.length())
         return QString::fromLatin1("''");
 
@@ -547,6 +558,7 @@ QString QtcProcess::quoteArgUnix(const QString &arg)
         ret.prepend(QLatin1Char('\''));
         ret.append(QLatin1Char('\''));
     }
+#endif
     return ret;
 }
 
@@ -600,7 +612,7 @@ static QString quoteArgWin(const QString &arg)
 QtcProcess::Arguments QtcProcess::prepareArgs(const QString &cmd, SplitError *err, OsType osType,
                                    const Environment *env, const QString *pwd, bool abortOnMeta)
 {
-    if (osType == OsTypeWindows)
+    if (osType == OsTypeWindows || osType == OsTypeOs2)
         return prepareArgsWin(cmd, err, env, pwd);
     else
         return Arguments::createUnixArgs(splitArgs(cmd, osType, abortOnMeta, err, env, pwd));
@@ -609,7 +621,7 @@ QtcProcess::Arguments QtcProcess::prepareArgs(const QString &cmd, SplitError *er
 
 QString QtcProcess::quoteArg(const QString &arg, OsType osType)
 {
-    if (osType == OsTypeWindows)
+    if (osType == OsTypeWindows || osType == OsTypeOs2)
         return quoteArgWin(arg);
     else
         return quoteArgUnix(arg);
@@ -657,6 +669,11 @@ bool QtcProcess::prepareCommand(const QString &command, const QString &arguments
         if (osType == OsTypeWindows) {
             *outCmd = QString::fromLatin1(qgetenv("COMSPEC"));
             *outArgs = Arguments::createWindowsArgs(QLatin1String("/v:off /s /c \"")
+                    + quoteArg(QDir::toNativeSeparators(command)) + QLatin1Char(' ') + arguments
+                    + QLatin1Char('"'));
+        } else if (osType == OsTypeOs2) {
+            *outCmd = QString::fromLatin1(qgetenv("COMSPEC"));
+            *outArgs = Arguments::createWindowsArgs(QLatin1String("/s /c \"")
                     + quoteArg(QDir::toNativeSeparators(command)) + QLatin1Char(' ') + arguments
                     + QLatin1Char('"'));
         } else {
@@ -734,6 +751,18 @@ void QtcProcess::start()
         // Note: Arguments set with setNativeArgs will be appended to the ones
         // passed with start() below.
         QProcess::start(command, QStringList());
+    } else if (osType == OsTypeOs2) {
+        if (!success) {
+            setErrorString(tr("Error in command line."));
+            // Should be FailedToStart, but we cannot set the process error from the outside,
+            // so it would be inconsistent.
+            emit errorOccurred(QProcess::UnknownError);
+            return;
+        }
+        if (arguments.toWindowsArgs().isEmpty())
+           QProcess::start(command, QStringList());
+        else
+           QProcess::start(command, QStringList( arguments.toWindowsArgs()));
     } else {
         if (!success) {
             setErrorString(tr("Error in command line."));
@@ -902,7 +931,7 @@ bool QtcProcess::expandMacros(QString *cmd, AbstractMacroExpander *mx, OsType os
 
     int pos = 0;
 
-    if (osType == OsTypeWindows) {
+    if (osType == OsTypeWindows || osType == OsTypeOs2) {
         enum { // cmd.exe parsing state
             ShellBasic, // initial state
             ShellQuoted, // double-quoted state => *no* other meta chars are interpreted
@@ -1241,7 +1270,7 @@ bool QtcProcess::ArgIterator::next()
     m_simple = true;
     m_value.clear();
 
-    if (m_osType == OsTypeWindows) {
+    if (m_osType == OsTypeWindows || m_osType == OsTypeOs2) {
         enum { // cmd.exe parsing state
             ShellBasic, // initial state
             ShellQuoted, // double-quoted state => *no* other meta chars are interpreted

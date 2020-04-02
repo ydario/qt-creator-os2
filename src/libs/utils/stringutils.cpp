@@ -109,7 +109,7 @@ QTCREATOR_UTILS_EXPORT QString commonPath(const QStringList &files)
 
 QTCREATOR_UTILS_EXPORT QString withTildeHomePath(const QString &path)
 {
-    if (HostOsInfo::isWindowsHost())
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host())
         return path;
 
     static const QString homePath = QDir::homePath();

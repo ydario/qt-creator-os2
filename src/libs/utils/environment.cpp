@@ -94,6 +94,7 @@ void Environment::prependOrSet(const QString &key, const QString &value, const Q
 void Environment::prependOrSetLibrarySearchPath(const QString &value)
 {
     switch (m_osType) {
+    case OsTypeOs2:
     case OsTypeWindows: {
         const QChar sep = ';';
         prependOrSet("PATH", QDir::toNativeSeparators(value), QString(sep));
@@ -180,11 +181,15 @@ QStringList Environment::appendExeExtensions(const QString &executable) const
 {
     QStringList execs(executable);
     const QFileInfo fi(executable);
-    if (m_osType == OsTypeWindows) {
+    if (m_osType == OsTypeWindows || m_osType == OsTypeOs2) {
         // Check all the executable extensions on windows:
         // PATHEXT is only used if the executable has no extension
         if (fi.suffix().isEmpty()) {
+#ifdef Q_OS_OS2
+            const QStringList extensions = { ".COM", ".EXE", ".CMD" };
+#else
             const QStringList extensions = expandedValueForKey("PATHEXT").split(';');
+#endif
 
             for (const QString &ext : extensions)
                 execs << executable + ext.toLower();
@@ -323,7 +328,7 @@ QString Environment::expandVariables(const QString &input) const
 {
     QString result = input;
 
-    if (m_osType == OsTypeWindows) {
+    if (m_osType == OsTypeWindows || m_osType == OsTypeOs2) {
         for (int vStart = -1, i = 0; i < result.length(); ) {
             if (result.at(i++) == '%') {
                 if (vStart > 0) {

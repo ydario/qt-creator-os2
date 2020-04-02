@@ -727,6 +727,7 @@ static QString checkBinary(const QDir &dir, const QString &binary)
     case OsTypeOtherUnix:
     case OsTypeOther:
         break;
+    case OsTypeOs2:
     case OsTypeWindows: {
             static const char *windowsExtensions[] = {".cmd", ".bat", ".exe", ".com"};
             // Check the Windows extensions using the order
@@ -763,7 +764,7 @@ QString SynchronousProcess::locateBinary(const QString &path, const QString &bin
         return checkBinary(absInfo.dir(), absInfo.fileName());
 
     // Windows finds binaries  in the current directory
-    if (HostOsInfo::isWindowsHost()) {
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host()) {
         const QString currentDirBinary = checkBinary(QDir::current(), binary);
         if (!currentDirBinary.isEmpty())
             return currentDirBinary;

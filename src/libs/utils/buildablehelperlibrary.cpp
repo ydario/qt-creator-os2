@@ -179,7 +179,10 @@ QStringList BuildableHelperLibrary::possibleQMakeCommands()
     // On Unix some distributions renamed qmake with a postfix to avoid clashes
     // On OS X, Qt 4 binary packages also has renamed qmake. There are also symbolic links that are
     // named "qmake", but the file dialog always checks against resolved links (native Cocoa issue)
-    return QStringList(HostOsInfo::withExecutableSuffix("qmake*"));
+    return QStringList()
+        << HostOsInfo::withExecutableSuffix("qmake-qt6")
+        << HostOsInfo::withExecutableSuffix("qmake-qt5")
+        << HostOsInfo::withExecutableSuffix("qmake");
 }
 
 // Copy helper source files to a target directory, replacing older files.

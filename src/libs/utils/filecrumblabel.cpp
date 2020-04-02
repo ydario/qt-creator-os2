@@ -58,7 +58,7 @@ void FileCrumbLabel::setPath(const FilePath &path)
         const QString fileName = current.fileName();
         if (!fileName.isEmpty()) {
             links.prepend(linkForPath(current, fileName));
-        } else if (HostOsInfo::isWindowsHost() && QDir(current.toString()).isRoot()) {
+        } else if ((HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host()) && QDir(current.toString()).isRoot()) {
             // Only on Windows add the drive letter, without the '/' at the end
             QString display = current.toString();
             if (display.endsWith('/'))
@@ -67,9 +67,9 @@ void FileCrumbLabel::setPath(const FilePath &path)
         }
         current = current.parentDir();
     }
-    const auto pathSeparator = HostOsInfo::isWindowsHost() ? QLatin1String("&nbsp;\\ ")
+    const auto pathSeparator = HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host() ? QLatin1String("&nbsp;\\ ")
                                                            : QLatin1String("&nbsp;/ ");
-    const QString prefix = HostOsInfo::isWindowsHost() ? QString("\\ ") : QString("/ ");
+    const QString prefix = HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host() ? QString("\\ ") : QString("/ ");
     setText(prefix + links.join(pathSeparator));
 }
 

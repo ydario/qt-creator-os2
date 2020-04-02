@@ -390,7 +390,7 @@ bool FileUtils::isRelativePath(const QString &path)
 {
     if (path.startsWith(QLatin1Char('/')))
         return false;
-    if (HostOsInfo::isWindowsHost()) {
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host()) {
         if (path.startsWith(QLatin1Char('\\')))
             return false;
         // Unlike QFileInfo, this won't accept a relative path with a drive letter.
@@ -616,7 +616,7 @@ FileSaver::FileSaver(const QString &filename, QIODevice::OpenMode mode)
 {
     m_fileName = filename;
     // Workaround an assert in Qt -- and provide a useful error message, too:
-    if (HostOsInfo::isWindowsHost()) {
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host()) {
         // Taken from: https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247(v=vs.85).aspx
         static const QStringList reservedNames
                 = {"CON", "PRN", "AUX", "NUL",

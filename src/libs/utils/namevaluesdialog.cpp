@@ -43,7 +43,7 @@ static EnvironmentItems cleanUp(const EnvironmentItems &items)
     QSet<QString> uniqueSet;
     for (int i = items.count() - 1; i >= 0; i--) {
         EnvironmentItem item = items.at(i);
-        if (HostOsInfo::isWindowsHost())
+        if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host())
             item.name = item.name.toUpper();
         const QString &itemName = item.name;
         QString emptyName = itemName;
