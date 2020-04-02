@@ -47,7 +47,7 @@
 # include <qthreadpool.h>
 #endif
 
-#ifdef Q_OS_UNIX
+#if defined(Q_OS_UNIX) || defined(Q_OS_OS2)
 #include <unistd.h>
 #include <sys/utsname.h>
 #  ifdef Q_OS_BSD4
@@ -1085,7 +1085,7 @@ void QMakeEvaluator::loadDefaults()
                 vcInstallDir,
                 m_option->getEnv(QLatin1String("PATH")));
 # endif
-#elif defined(Q_OS_UNIX)
+#elif defined(Q_OS_UNIX) || defined(Q_OS_OS2)
     struct utsname name;
     if (uname(&name) != -1) {
         vars[ProKey("QMAKE_HOST.os")] << ProString(name.sysname);
@@ -1182,7 +1182,7 @@ bool QMakeEvaluator::loadSpecInternal()
     }
 #ifndef QT_BUILD_QMAKE
     // Legacy support for Qt4 default specs
-#  ifdef Q_OS_UNIX
+#  if defined(Q_OS_UNIX) || defined(Q_OS_OS2)
     if (m_qmakespec.endsWith(QLatin1String("/default-host"))
         || m_qmakespec.endsWith(QLatin1String("/default"))) {
         QString rspec = QFileInfo(m_qmakespec).symLinkTarget();

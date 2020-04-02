@@ -68,7 +68,7 @@ bool IoUtils::isRelativePath(const QString &path)
     if (path.startsWith(QLatin1String(":/")))
         return false;
 #endif
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
     // Unlike QFileInfo, this considers only paths with both a drive prefix and
     // a subsequent (back-)slash absolute:
     if (path.length() >= 3 && path.at(1) == QLatin1Char(':') && path.at(0).isLetter()
@@ -104,7 +104,7 @@ QString IoUtils::resolvePath(const QString &baseDir, const QString &fileName)
         return QString();
     if (isAbsolutePath(fileName))
         return QDir::cleanPath(fileName);
-#ifdef Q_OS_WIN // Add drive to otherwise-absolute path:
+#if defined(Q_OS_WIN) || defined(Q_OS_OS2) // Add drive to otherwise-absolute path:
     if (fileName.at(0).unicode() == '/' || fileName.at(0).unicode() == '\\') {
         return isAbsolutePath(baseDir) ? QDir::cleanPath(baseDir.left(2) + fileName)
                                        : QDir::cleanPath(fileName);
@@ -219,7 +219,7 @@ static QString windowsErrorCode()
 
 bool IoUtils::touchFile(const QString &targetFileName, const QString &referenceFileName, QString *errorString)
 {
-#  ifdef Q_OS_UNIX
+#  if defined(Q_OS_UNIX) || defined(Q_OS_OS2)
     struct stat st;
     if (stat(referenceFileName.toLocal8Bit().constData(), &st)) {
         *errorString = fL1S("Cannot stat() reference file %1: %2.").arg(referenceFileName, fL1S(strerror(errno)));

@@ -54,7 +54,7 @@
 
 #include <algorithm>
 
-#ifdef Q_OS_UNIX
+#if defined(Q_OS_UNIX) || defined(Q_OS_OS2)
 #include <time.h>
 #include <errno.h>
 #include <unistd.h>
@@ -68,7 +68,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef Q_OS_WIN32
+#if defined(Q_OS_WIN32) || defined(Q_OS_OS2)
 #define QT_POPEN _popen
 #define QT_POPEN_READ "rb"
 #define QT_PCLOSE _pclose
@@ -465,6 +465,9 @@ void QMakeEvaluator::runProcess(QProcess *proc, const QString &command) const
 # ifdef Q_OS_WIN
     proc->setNativeArguments(QLatin1String("/v:off /s /c \"") + command + QLatin1Char('"'));
     proc->start(m_option->getEnv(QLatin1String("COMSPEC")), QStringList());
+# elif def Q_OS_OS2
+    proc->setNativeArguments(QLatin1String("/s /c \"") + command + QLatin1Char('"'));
+    proc->start(m_option->getEnv(QLatin1String("COMSPEC")), QStringList());
 # else
     proc->start(QLatin1String("/bin/sh"), QStringList() << QLatin1String("-c") << command);
 # endif
@@ -493,7 +496,7 @@ QByteArray QMakeEvaluator::getCommandOutput(const QString &args, int *exitCode) 
     }
 # endif
     out = proc.readAllStandardOutput();
-# ifdef Q_OS_WIN
+# if defined(Q_OS_WIN) || defined(Q_OS_OS2)
     // FIXME: Qt's line end conversion on sequential files should really be fixed
     out.replace("\r\n", "\n");
 # endif
@@ -515,7 +518,7 @@ QByteArray QMakeEvaluator::getCommandOutput(const QString &args, int *exitCode) 
         *exitCode = WIFEXITED(ec) ? WEXITSTATUS(ec) : -1;
 # endif
     }
-# ifdef Q_OS_WIN
+# if defined(Q_OS_WIN) || defined(Q_OS_OS2)
     out.replace("\r\n", "\n");
 # endif
 #endif
@@ -1212,7 +1215,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinExpand(
             evalError(fL1S("system_path(path) requires one argument."));
         } else {
             QString rstr = args.at(0).toQString(m_tmp1);
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
             rstr.replace(QLatin1Char('/'), QLatin1Char('\\'));
 #else
             rstr.replace(QLatin1Char('\\'), QLatin1Char('/'));
@@ -1229,7 +1232,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinExpand(
                 rstr.replace(QLatin1Char('/'), QLatin1Char('\\'));
             } else {
                 rstr.replace(QLatin1Char('\\'), QLatin1Char('/'));
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
                 // Convert d:/foo/bar to msys-style /d/foo/bar.
                 if (rstr.length() > 2 && rstr.at(1) == QLatin1Char(':') && rstr.at(2) == QLatin1Char('/')) {
                     rstr[1] = rstr.at(0);
@@ -1754,7 +1757,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
         int ec = system((QLatin1String("cd ")
                          + IoUtils::shellQuote(QDir::toNativeSeparators(currentDirectory()))
                          + QLatin1String(" && ") + args.at(0)).toLocal8Bit().constData());
-#  ifdef Q_OS_UNIX
+#  if defined(Q_OS_UNIX) || defined(Q_OS_OS2)
         if (ec != -1 && WIFSIGNALED(ec) && (WTERMSIG(ec) == SIGQUIT || WTERMSIG(ec) == SIGINT))
             raise(WTERMSIG(ec));
 #  endif
