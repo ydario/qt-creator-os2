@@ -191,6 +191,9 @@ bool CorePlugin::initialize(const QStringList &arguments, QString *errorMessage)
     expander->registerVariable("HostOs:isWindows",
                                tr("Is %1 running on Windows?").arg(Constants::IDE_DISPLAY_NAME),
                                []() { return QVariant(Utils::HostOsInfo::isWindowsHost()).toString(); });
+    expander->registerVariable("HostOs:isOs2",
+                               tr("Is %1 running on OS2?").arg(Constants::IDE_DISPLAY_NAME),
+                               []() { return QVariant(Utils::HostOsInfo::isOs2Host()).toString(); });
     expander->registerVariable("HostOs:isOSX",
                                tr("Is %1 running on OS X?").arg(Constants::IDE_DISPLAY_NAME),
                                []() { return QVariant(Utils::HostOsInfo::isMacHost()).toString(); });

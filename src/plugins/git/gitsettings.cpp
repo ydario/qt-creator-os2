@@ -52,7 +52,7 @@ GitSettings::GitSettings()
 {
     setSettingsGroup("Git");
 
-    declareKey(binaryPathKey, "git");
+    declareKey(binaryPathKey, "git" QTC_HOST_EXE_SUFFIX);
     declareKey(timeoutKey, Utils::HostOsInfo::isWindowsHost() ? 60 : 30);
     declareKey(pullRebaseKey, false);
     declareKey(showTagsKey, false);

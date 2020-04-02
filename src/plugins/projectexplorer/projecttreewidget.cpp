@@ -40,6 +40,7 @@
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
 #include <coreplugin/find/itemviewfind.h>
+#include <coreplugin/fileiconprovider.h>
 
 #include <utils/algorithm.h>
 #include <utils/navigationtreeview.h>
@@ -146,6 +147,7 @@ class ProjectTreeView : public NavigationTreeView
 public:
     ProjectTreeView()
     {
+        setIconSize(Core::FileIconProvider::iconSize());
         setEditTriggers(QAbstractItemView::EditKeyPressed);
         setContextMenuPolicy(Qt::CustomContextMenu);
         setDragEnabled(true);

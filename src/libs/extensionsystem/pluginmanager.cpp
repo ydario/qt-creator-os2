@@ -1576,6 +1576,8 @@ static inline QString getPlatformName()
         return QLatin1String(HostOsInfo::isLinuxHost() ? "Linux" : "Unix");
     else if (HostOsInfo::isWindowsHost())
         return QLatin1String("Windows");
+    else if (HostOsInfo::isOs2Host())
+        return QLatin1String("OS2");
     return QLatin1String("Unknown");
 }
 

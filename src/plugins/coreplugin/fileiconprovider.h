@@ -51,5 +51,7 @@ CORE_EXPORT void registerIconOverlayForMimeType(const QIcon &icon, const QString
 
 CORE_EXPORT QIcon directoryIcon(const QString &overlay);
 
+CORE_EXPORT QSize iconSize();
+
 } // namespace FileIconProvider
 } // namespace Core

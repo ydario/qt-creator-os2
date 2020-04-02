@@ -73,6 +73,7 @@ public:
         VxWorks,
         QnxOS,
         BareMetalOS,
+        Os2OS,
         UnknownOS
     };
 
@@ -101,6 +102,9 @@ public:
         WindowsMSysFlavor,
         WindowsCEFlavor,
 
+        // Os2
+        GenericOs2Flavor,
+
         // Embedded
         VxWorksFlavor,
 
@@ -116,6 +120,7 @@ public:
         MachOFormat,
         PEFormat,
         RuntimeQmlFormat,
+        LXFormat,
         UbrofFormat,
         OmfFormat,
         EmscriptenFormat,

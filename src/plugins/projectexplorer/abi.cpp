@@ -117,6 +117,7 @@ static void setupPreregisteredOsFlavors() {
     registerOsFlavor(Abi::WindowsCEFlavor, "ce", {Abi::OS::WindowsOS});
     registerOsFlavor(Abi::VxWorksFlavor, "vxworks", {Abi::OS::VxWorks});
     registerOsFlavor(Abi::RtosFlavor, "rtos", {Abi::OS::WindowsOS});
+    registerOsFlavor(Abi::GenericOs2Flavor, "generic", {Abi::OS::Os2OS});
     registerOsFlavor(Abi::GenericFlavor, "generic", {Abi::OS::LinuxOS,
                                                      Abi::OS::DarwinOS,
                                                      Abi::OS::UnixOS,
@@ -418,6 +419,23 @@ static Abis abiOf(const QByteArray &data)
         result.append(Abi(Abi::AsmJsArchitecture, Abi::UnknownOS, Abi::UnknownFlavor,
                           Abi::EmscriptenFormat, 32));
     } else if (data.size() >= 64){
+
+        int extHdrOfs = 0;
+        if (data.size() >= 66
+            && static_cast<unsigned char>(data.at(0)) == 'M' && static_cast<unsigned char>(data.at(1)) == 'Z'
+            && ((static_cast<unsigned char>(data.at(25)) << 8) + static_cast<unsigned char>(data.at(24))) >= 64) {
+
+            // offset of secondary header ('LX', 'NE', 'PE')
+            extHdrOfs = (static_cast<unsigned char>(data.at(63)) << 24) |
+		        (static_cast<unsigned char>(data.at(62)) << 16) |
+		        (static_cast<unsigned char>(data.at(61)) <<  8) |
+		        (static_cast<unsigned char>(data.at(60)) <<  0);
+        }
+
+        if (static_cast<unsigned char>(data.at(extHdrOfs)) == 'L' && static_cast<unsigned char>(data.at(extHdrOfs+1)) == 'X') {
+            result.append(Abi(Abi::X86Architecture, Abi::Os2OS, Abi::GenericOs2Flavor, Abi::LXFormat, 32));
+        } else {
+
         // Windows PE: values are LE (except for a few exceptions which we will not use here).
 
         // MZ header first (ZM is also allowed, but rarely used)
@@ -433,6 +451,9 @@ static Abis abiOf(const QByteArray &data)
         if (getUint8(data, pePos) == 'P' && getUint8(data, pePos + 1) == 'E'
             && getUint8(data, pePos + 2) == 0 && getUint8(data, pePos + 3) == 0)
             result = parseCoffHeader(data.mid(pePos + 4));
+
+        }
+
     }
     return result;
 }
@@ -553,6 +574,10 @@ Abi Abi::abiFromTargetTriplet(const QString &triple)
             os = QnxOS;
             flavor = GenericFlavor;
             format = ElfFormat;
+        } else if (p.startsWith("os2")) {
+            os = Os2OS;
+            flavor = GenericOs2Flavor;
+            format = LXFormat;
         } else if (p.startsWith("emscripten")) {
             format = EmscriptenFormat;
             width = 32;
@@ -582,6 +607,8 @@ Utils::OsType Abi::abiOsToOsType(const Abi::OS os)
         return Utils::OsType::OsTypeOtherUnix;
     case ProjectExplorer::Abi::WindowsOS:
         return Utils::OsType::OsTypeWindows;
+    case ProjectExplorer::Abi::Os2OS:
+        return Utils::OsType::OsTypeOs2;
     case ProjectExplorer::Abi::VxWorks:
     case ProjectExplorer::Abi::QnxOS:
     case ProjectExplorer::Abi::BareMetalOS:
@@ -729,6 +756,8 @@ QString Abi::toString(const OS &o)
         return QLatin1String("vxworks");
     case QnxOS:
         return QLatin1String("qnx");
+    case Os2OS:
+        return QLatin1String("os2");
     case BareMetalOS:
         return QLatin1String("baremetal");
     case UnknownOS:
@@ -758,6 +787,8 @@ QString Abi::toString(const BinaryFormat &bf)
         return QLatin1String("mach_o");
     case RuntimeQmlFormat:
         return QLatin1String("qml_rt");
+    case LXFormat:
+        return QLatin1String("lx");
     case UbrofFormat:
         return QLatin1String("ubrof");
     case OmfFormat:
@@ -871,6 +902,8 @@ Abi::OS Abi::osFromString(const QStringRef &o)
         return VxWorks;
     if (o == "qnx")
         return QnxOS;
+    if (o == "os2")
+        return Os2OS;
     if (o == "baremetal")
         return BareMetalOS;
     return UnknownOS;
@@ -895,6 +928,8 @@ Abi::BinaryFormat Abi::binaryFormatFromString(const QStringRef &bf)
         return PEFormat;
     if (bf == "mach_o")
         return MachOFormat;
+    if (bf == "lx")
+        return LXFormat;
     if (bf == "ubrof")
         return UbrofFormat;
     if (bf == "omf")
@@ -997,6 +1032,10 @@ Abi Abi::hostAbi()
     subos = WindowsMSysFlavor;
 #endif
     format = PEFormat;
+#elif defined (Q_OS_OS2)
+    os = Os2OS;
+    subos = GenericOs2Flavor;
+    format = LXFormat;
 #elif defined (Q_OS_LINUX)
     os = LinuxOS;
     subos = GenericFlavor;

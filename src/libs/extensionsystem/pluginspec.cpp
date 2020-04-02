@@ -46,6 +46,12 @@
 #include <QPluginLoader>
 #include <QRegExp>
 
+#ifdef Q_OS_OS2
+#define INCL_DOSMISC
+#define INCL_DOSERRORS
+#include <os2.h>
+#endif
+
 /*!
     \class ExtensionSystem::PluginDependency
     \inmodule QtCreator
@@ -208,6 +214,19 @@ QString PluginSpec::name() const
 {
     return d->name;
 }
+
+/*!
+    \fn QString PluginSpec::shortName() const
+    The short plugin name. This is valid after the PluginSpec::Read state is reached.
+
+    \note This property is only available on OS/2.
+*/
+#ifdef  Q_OS_OS2
+QString PluginSpec::shortName() const
+{
+    return d->shortName;
+}
+#endif
 
 /*!
     Returns the plugin version. This is valid after the PluginSpec::Read state
@@ -568,6 +587,9 @@ namespace {
     const char DEPENDENCY_TYPE_TEST[] = "test";
     const char ARGUMENTS[] = "Arguments";
     const char ARGUMENT_NAME[] = "Name";
+#ifdef  Q_OS_OS2
+    const char * const PLUGIN_SHORT_NAME = "shortName";
+#endif
     const char ARGUMENT_PARAMETER[] = "Parameter";
     const char ARGUMENT_DESCRIPTION[] = "Description";
 }
@@ -715,6 +737,14 @@ bool PluginSpecPrivate::readMetaData(const QJsonObject &pluginMetaData)
     if (!value.isString())
         return reportError(msgValueIsNotAString(PLUGIN_NAME));
     name = value.toString();
+
+#ifdef  Q_OS_OS2
+    value = metaData.value(QLatin1String(PLUGIN_SHORT_NAME));
+    if (!value.isUndefined())
+        shortName = value.toString();
+    if (shortName.isEmpty())
+        shortName = name;
+#endif
 
     value = metaData.value(QLatin1String(PLUGIN_VERSION));
     if (value.isUndefined())
@@ -1018,6 +1048,35 @@ bool PluginSpecPrivate::loadLibrary()
         loader.unload();
         return false;
     }
+
+#ifdef Q_OS_OS2
+    // OS/2 kernel 4.5 has a bug that prevents the DLL imported by another DLL
+    // or EXE from being found in memory if it was loaded by FQN. Since plugins
+    // are loaded by FQN and some of them may be linked to other plugins throguh
+    // import libraries, this may cause a load failure. The fix is to add the
+    // directory of each loaded plugin to BEGINLIBPATH so that its dependands
+    // (that can be loaded aferwards) are able to locate it.
+    char libPathBuf[4096];
+    if (DosQueryExtLIBPATH((PSZ)libPathBuf, BEGIN_LIBPATH) == NO_ERROR) {
+        QByteArray libPath(libPathBuf);
+        QByteArray dirName = QFile::encodeName(location).replace('/', '\\');
+        // check if already there to avoid cluttering
+        bool found = false;
+        foreach (const QByteArray &path, libPath.split(';')) {
+            if (qstricmp(path, dirName) == 0) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            if (!libPath.isEmpty() && !libPath.endsWith(';'))
+                libPath.append(';');
+            libPath.append(dirName);
+            DosSetExtLIBPATH((PCSZ)libPath.constData(), BEGIN_LIBPATH);
+        }
+    }
+#endif
+
     state = PluginSpec::Loaded;
     plugin = pluginObject;
     plugin->d->pluginSpec = q;

@@ -529,6 +529,7 @@ public:
 
     DeviceManager m_deviceManager{true};
 
+#ifndef Q_OS_OS2
 #ifdef Q_OS_WIN
     WinDebugInterface m_winDebugInterface;
     MsvcToolChainFactory m_mscvToolChainFactory;
@@ -540,6 +541,7 @@ public:
 #ifndef Q_OS_MACOS
     MingwToolChainFactory m_mingwToolChainFactory; // Mingw offers cross-compiling to windows
 #endif
+#endif // Q_OS_OS2
 
     GccToolChainFactory m_gccToolChainFactory;
     ClangToolChainFactory m_clangToolChainFactory;

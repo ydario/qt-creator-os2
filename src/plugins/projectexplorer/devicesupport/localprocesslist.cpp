@@ -30,7 +30,7 @@
 #include <QLibrary>
 #include <QTimer>
 
-#ifdef Q_OS_UNIX
+#if defined(Q_OS_UNIX) || defined(Q_OS_OS2)
 #include <QProcess>
 #include <QDir>
 #include <signal.h>
@@ -86,7 +86,7 @@ QList<DeviceProcessItem> LocalProcessList::getLocalProcesses()
 
 #endif //Q_OS_WIN
 
-#ifdef Q_OS_UNIX
+#if defined(Q_OS_UNIX) || defined(Q_OS_OS2)
 LocalProcessList::LocalProcessList(const IDevice::ConstPtr &device, QObject *parent)
     : DeviceProcessList(device, parent)
 {

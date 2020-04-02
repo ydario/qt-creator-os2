@@ -136,7 +136,7 @@ QIcon FileIconProviderImplementation::icon(const QFileInfo &fileInfo) const
 
     // Get icon from OS (and cache it based on suffix!)
     QIcon icon;
-    if (HostOsInfo::isWindowsHost() || HostOsInfo::isMacHost()) {
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isMacHost() || HostOsInfo::isOs2Host()) {
         icon = QFileIconProvider::icon(fileInfo);
     } else { // File icons are unknown on linux systems.
         static const QIcon unknownFileIcon(QApplication::style()->standardIcon(QStyle::SP_FileIcon));
@@ -227,6 +227,15 @@ QIcon directoryIcon(const QString &overlay)
     QIcon result;
     result.addPixmap(Core::FileIconProvider::overlayIcon(dirPixmap, overlayIcon));
     return result;
+}
+
+/*!
+  Returns the native size of the small icon.
+  */
+QSize iconSize()
+{
+    int s = qApp->style()->pixelMetric(QStyle::PM_SmallIconSize);
+    return QSize(s, s);
 }
 
 } // namespace FileIconProvider

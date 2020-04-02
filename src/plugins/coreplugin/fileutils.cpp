@@ -34,6 +34,7 @@
 #include <utils/environment.h>
 #include <utils/hostosinfo.h>
 #include <utils/unixutils.h>
+#include <utils/os2utils.h>
 
 #include <QApplication>
 #include <QDir>
@@ -83,6 +84,8 @@ void FileUtils::showInGraphicalShell(QWidget *parent, const QString &pathIn)
             param += QLatin1String("/select,");
         param += QDir::toNativeSeparators(fileInfo.canonicalFilePath());
         QProcess::startDetached(explorer.toString(), param);
+    } else if (HostOsInfo::isOs2Host()) {
+        Utils::Os2Utils::openFolder(parent, pathIn);
     } else if (HostOsInfo::isMacHost()) {
         QStringList scriptArgs;
         scriptArgs << QLatin1String("-e")
@@ -137,14 +140,14 @@ QString FileUtils::msgGraphicalShellAction()
 
 QString FileUtils::msgTerminalHereAction()
 {
-    if (HostOsInfo::isWindowsHost())
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host())
         return QApplication::translate("Core::Internal", "Open Command Prompt Here");
     return QApplication::translate("Core::Internal", "Open Terminal Here");
 }
 
 QString FileUtils::msgTerminalWithAction()
 {
-    if (HostOsInfo::isWindowsHost())
+    if (HostOsInfo::isWindowsHost() || HostOsInfo::isOs2Host())
         return QApplication::translate("Core::Internal", "Open Command Prompt With");
     return QApplication::translate("Core::Internal", "Open Terminal With");
 }
