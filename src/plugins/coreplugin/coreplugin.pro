@@ -256,7 +256,7 @@ else:macx {
         progressmanager/progressmanager_mac.mm
     LIBS += -framework AppKit
 }
-else:unix {
+else:unix|os2 {
     SOURCES += progressmanager/progressmanager_x11.cpp
 
     IMAGE_SIZE_LIST = 16 24 32 48 64 128 256 512

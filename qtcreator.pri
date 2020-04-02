@@ -131,11 +131,14 @@ osx {
     isEmpty(IDE_OUTPUT_PATH): IDE_OUTPUT_PATH = $$IDE_BUILD_TREE
 
     IDE_LIBRARY_PATH = $$IDE_OUTPUT_PATH/$$IDE_LIBRARY_BASENAME/qtcreator
-    IDE_PLUGIN_PATH  = $$IDE_LIBRARY_PATH/plugins
+    os2: \
+        IDE_PLUGIN_PATH  = $$IDE_OUTPUT_PATH/bin/plugins
+    else: \
+        IDE_PLUGIN_PATH  = $$IDE_LIBRARY_PATH/plugins
     IDE_DATA_PATH    = $$IDE_OUTPUT_PATH/share/qtcreator
     IDE_DOC_PATH     = $$IDE_OUTPUT_PATH/share/doc/qtcreator
     IDE_BIN_PATH     = $$IDE_OUTPUT_PATH/bin
-    win32: \
+    win32|os2: \
         IDE_LIBEXEC_PATH = $$IDE_OUTPUT_PATH/bin
     else: \
         IDE_LIBEXEC_PATH = $$IDE_OUTPUT_PATH/libexec/qtcreator
@@ -145,8 +148,11 @@ osx {
     LINK_PLUGIN_PATH  = $$LINK_LIBRARY_PATH/plugins
 
     INSTALL_LIBRARY_PATH = $$QTC_PREFIX/$$IDE_LIBRARY_BASENAME/qtcreator
-    INSTALL_PLUGIN_PATH  = $$INSTALL_LIBRARY_PATH/plugins
-    win32: \
+    os2: \
+        INSTALL_PLUGIN_PATH  = $$QTC_PREFIX/bin/plugins
+    else: \
+        INSTALL_PLUGIN_PATH  = $$INSTALL_LIBRARY_PATH/plugins
+    win32|os2: \
         INSTALL_LIBEXEC_PATH = $$QTC_PREFIX/bin
     else: \
         INSTALL_LIBEXEC_PATH = $$QTC_PREFIX/libexec/qtcreator

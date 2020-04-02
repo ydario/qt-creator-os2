@@ -75,7 +75,7 @@ public:
         if (input.endsWith('/')) // no slash at the end (but allowed in the middle)
             return Intermediate;
 
-        if (m_localBranches.contains(input, Utils::HostOsInfo::isWindowsHost()
+        if (m_localBranches.contains(input, Utils::HostOsInfo::isWindowsHost() || Utils::HostOsInfo::isOs2Host()
                                      ? Qt::CaseInsensitive : Qt::CaseSensitive)) {
             return Intermediate;
         }

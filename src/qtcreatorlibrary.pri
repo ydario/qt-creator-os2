@@ -1,5 +1,6 @@
 include($$replace(_PRO_FILE_PWD_, ([^/]+$), \\1/\\1_dependencies.pri))
 TARGET = $$QTC_LIB_NAME
+os2:TARGET_SHORT = $$QTC_LIB_NAME_SHORT
 
 include(../qtcreator.pri)
 
@@ -30,6 +31,9 @@ contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 win32 {
     dlltarget.path = $$INSTALL_BIN_PATH
     INSTALLS += dlltarget
+} else:os2 {
+    target.path = $$INSTALL_BIN_PATH
+    INSTALLS += target
 } else {
     target.path = $$INSTALL_LIBRARY_PATH
     INSTALLS += target

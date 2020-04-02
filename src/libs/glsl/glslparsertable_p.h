@@ -50,6 +50,11 @@
 
 QT_BEGIN_NAMESPACE
 
+#ifdef Q_OS_OS2
+// avoid conflict with i386/trap.h
+#undef T_RESERVED
+#endif
+
 class GLSLParserTable
 {
 public:

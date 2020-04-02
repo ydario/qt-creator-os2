@@ -53,7 +53,7 @@ isEmpty(BUILD_CPLUSPLUS_TOOLS):BUILD_CPLUSPLUS_TOOLS=$$(BUILD_CPLUSPLUS_TOOLS)
 }
 
 exists(perfparser/perfparser.pro) {
-    win32 {
+    win32|os2 {
         SUBDIRS += perfparser
         PERFPARSER_APP_DESTDIR = $$IDE_BUILD_TREE/bin
         PERFPARSER_APP_INSTALLDIR = $$QTC_PREFIX/bin

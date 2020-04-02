@@ -8,6 +8,7 @@ exists($$depfile) {
         error("QTC_PLUGIN_NAME is empty. Maybe you meant to create $$basename(depfile)?")
 }
 TARGET = $$QTC_PLUGIN_NAME
+os2:TARGET_SHORT = $$QTC_PLUGIN_NAME_SHORT
 
 plugin_deps = $$QTC_PLUGIN_DEPENDS
 plugin_test_deps = $$QTC_TEST_DEPENDS
@@ -95,7 +96,8 @@ include(rpath.pri)
 contains(QT_CONFIG, reduce_exports):CONFIG += hide_symbols
 
 TEMPLATE = lib
-CONFIG += plugin plugin_with_soname
+!os2:CONFIG += plugin plugin_with_soname
+os2:CONFIG += shared dll
 linux*:QMAKE_LFLAGS += $$QMAKE_LFLAGS_NOUNDEF
 
 target.path = $$INSTALL_PLUGIN_PATH

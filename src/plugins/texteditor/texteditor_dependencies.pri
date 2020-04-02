@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = TextEditor
+os2:QTC_PLUGIN_NAME_SHORT = TxtEdit
 QTC_LIB_DEPENDS += \
     aggregation \
     extensionsystem \

@@ -1,6 +1,8 @@
 unix:QMAKE_CXXFLAGS_DEBUG += -O2
 win32:QMAKE_CXXFLAGS_DEBUG += -O2
 
+os2:QMAKE_LFLAGS += -lpthread
+
 include(../../qtcreatorlibrary.pri)
 
 win32:DEFINES += SQLITE_API=__declspec(dllexport)

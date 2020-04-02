@@ -294,7 +294,7 @@ void CppEditorPlugin::extensionsInitialized()
     d->m_cppEditorFactory.addHoverHandler(new ColorPreviewHoverHandler);
     d->m_cppEditorFactory.addHoverHandler(new ResourcePreviewHoverHandler);
 
-    if (!HostOsInfo::isMacHost() && !HostOsInfo::isWindowsHost()) {
+    if (!HostOsInfo::isMacHost() && !HostOsInfo::isWindowsHost() && !HostOsInfo::isOs2Host()) {
         FileIconProvider::registerIconOverlayForMimeType(
                     QIcon(creatorTheme()->imageFile(Theme::IconOverlayCppSource, QLatin1String(":/cppeditor/images/qt_cpp.png"))),
                     CppTools::Constants::CPP_SOURCE_MIMETYPE);

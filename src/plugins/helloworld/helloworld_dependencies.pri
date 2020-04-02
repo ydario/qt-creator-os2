@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = HelloWorld
+os2:QTC_PLUGIN_NAME_SHORT = HloWrld
 QTC_LIB_DEPENDS += \
     extensionsystem
 

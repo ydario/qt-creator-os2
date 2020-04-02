@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = CppTools
+os2:QTC_PLUGIN_NAME_SHORT = CppTool
 QTC_LIB_DEPENDS += \
     cplusplus \
     extensionsystem \

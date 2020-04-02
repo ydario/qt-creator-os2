@@ -71,6 +71,7 @@ void Qt5NodeInstanceServer::initializeView()
 
     DesignerSupport::createOpenGLContext(m_quickView.data());
 
+#if !defined(Q_OS_OS2)
     if (qEnvironmentVariableIsSet("QMLDESIGNER_QUICK3D_MODE")
         && QCoreApplication::arguments().at(2) == "editormode") {
         /* In '3d editormode' we do not use the DesignerWindowManager
@@ -81,6 +82,7 @@ void Qt5NodeInstanceServer::initializeView()
         if (!context->makeCurrent(m_quickView))
             qWarning("QOpenGLContext: makeCurrent() failed...");
     }
+#endif
 
     if (qEnvironmentVariableIsSet("QML_FILE_SELECTORS")) {
         QQmlFileSelector *fileSelector = new QQmlFileSelector(engine(), engine());

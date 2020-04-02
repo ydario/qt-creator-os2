@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = QmlPreview
+os2:QTC_PLUGIN_NAME_SHORT = QmlPrvw
 QTC_LIB_DEPENDS += \
     extensionsystem \
     qmldebug \

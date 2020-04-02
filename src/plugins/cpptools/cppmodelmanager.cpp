@@ -520,7 +520,7 @@ CppModelManager::CppModelManager()
     d->m_enableGC = true;
 
     // Visual C++ has 1MiB, macOSX has 512KiB
-    if (Utils::HostOsInfo::isWindowsHost() || Utils::HostOsInfo::isMacHost())
+    if (Utils::HostOsInfo::isWindowsHost() || Utils::HostOsInfo::isMacHost() || Utils::HostOsInfo::isOs2Host())
         d->m_threadPool.setStackSize(2 * 1024 * 1024);
 
     qRegisterMetaType<QSet<QString> >();

@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = CppEditor
+os2:QTC_PLUGIN_NAME_SHORT = CppEdit
 QTC_LIB_DEPENDS += \
     extensionsystem \
     utils \

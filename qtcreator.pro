@@ -13,6 +13,7 @@ CONFIG   += ordered
 
 SUBDIRS = src share
 unix:!macx:!isEmpty(copydata):SUBDIRS += bin
+os2:!isEmpty(copydata):SUBDIRS += bin
 !isEmpty(BUILD_TESTS):SUBDIRS += tests
 
 DISTFILES += dist/copyright_template.txt \
@@ -91,6 +92,7 @@ else: ARCHITECTURE = $$QT_ARCH
 
 macx: PLATFORM = "mac"
 else:win32: PLATFORM = "windows"
+else:os2: PLATFORM = "os2"
 else:linux-*: PLATFORM = "linux-$${ARCHITECTURE}"
 else: PLATFORM = "unknown"
 

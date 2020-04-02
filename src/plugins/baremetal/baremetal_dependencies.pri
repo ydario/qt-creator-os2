@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = BareMetal
+os2:QTC_PLUGIN_NAME_SHORT = BrMtl
 QTC_LIB_DEPENDS += \
     extensionsystem \
     ssh \

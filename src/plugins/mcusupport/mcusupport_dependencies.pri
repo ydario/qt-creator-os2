@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = McuSupport
+os2:QTC_PLUGIN_NAME_SHORT = McSpprt
 
 QTC_LIB_DEPENDS += \
     extensionsystem \

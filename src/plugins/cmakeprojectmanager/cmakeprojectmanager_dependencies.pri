@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = CMakeProjectManager
+os2:QTC_PLUGIN_NAME_SHORT = CMkPMgr
 QTC_LIB_DEPENDS += \
     extensionsystem \
     qmljs \

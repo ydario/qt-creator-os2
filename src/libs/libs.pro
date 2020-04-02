@@ -18,7 +18,7 @@ SUBDIRS   += \
     languageserverprotocol \
     sqlite
 
-qtHaveModule(quick) {
+!os2:qtHaveModule(quick) {
     SUBDIRS += \
         tracing
 }

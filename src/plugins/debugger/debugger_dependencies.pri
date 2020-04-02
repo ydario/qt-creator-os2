@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = Debugger
+os2:QTC_PLUGIN_NAME_SHORT = Debugr
 QTC_LIB_DEPENDS += \
     aggregation \
     cplusplus \

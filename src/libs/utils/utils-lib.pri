@@ -289,6 +289,11 @@ FORMS += $$PWD/filewizardpage.ui \
 
 RESOURCES += $$PWD/utils.qrc
 
+os2 {
+    SOURCES += $$PWD/os2utils.cpp
+    HEADERS += $$PWD/os2utils.h
+}
+
 osx {
     HEADERS += \
         $$PWD/theme/theme_mac.h \

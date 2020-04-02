@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = QmlDesigner
+os2:QTC_PLUGIN_NAME_SHORT = QmlDsgn
 QTC_LIB_DEPENDS += \
     utils \
     qmljs \

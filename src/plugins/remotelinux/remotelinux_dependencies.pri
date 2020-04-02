@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = RemoteLinux
+os2:QTC_PLUGIN_NAME_SHORT = RmtLnx
 QTC_LIB_DEPENDS += \
     extensionsystem \
     qmldebug \

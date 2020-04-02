@@ -29,6 +29,7 @@ defineReplace(stripStaticBase) {
         isEmpty(vcproj):copy2build.variable_out = PRE_TARGETDEPS
         win32:copy2build.commands = $$QMAKE_COPY \"${QMAKE_FILE_IN}\" \"${QMAKE_FILE_OUT}\"
         unix:copy2build.commands = $$QMAKE_COPY ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
+        os2:copy2build.commands = $$QMAKE_COPY ${QMAKE_FILE_IN} ${QMAKE_FILE_OUT}
         copy2build.name = COPY ${QMAKE_FILE_IN}
         copy2build.CONFIG += no_link no_clean
         QMAKE_EXTRA_COMPILERS += copy2build

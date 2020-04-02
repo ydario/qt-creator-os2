@@ -119,7 +119,7 @@ static inline QString toHtml(const QString &t)
 
 static void displayHelpText(const QString &t)
 {
-    if (Utils::HostOsInfo::isWindowsHost() && qApp)
+    if ((Utils::HostOsInfo::isWindowsHost() || Utils::HostOsInfo::isOs2Host()) && qApp)
         QMessageBox::information(nullptr, QLatin1String(Core::Constants::IDE_DISPLAY_NAME), toHtml(t));
     else
         qWarning("%s", qPrintable(t));
@@ -127,7 +127,7 @@ static void displayHelpText(const QString &t)
 
 static void displayError(const QString &t)
 {
-    if (Utils::HostOsInfo::isWindowsHost() && qApp)
+    if ((Utils::HostOsInfo::isWindowsHost() || Utils::HostOsInfo::isOs2Host()) && qApp)
         QMessageBox::critical(nullptr, QLatin1String(Core::Constants::IDE_DISPLAY_NAME), t);
     else
         qCritical("%s", qPrintable(t));

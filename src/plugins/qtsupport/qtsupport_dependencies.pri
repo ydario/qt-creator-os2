@@ -1,4 +1,5 @@
 QTC_PLUGIN_NAME = QtSupport
+os2:QTC_PLUGIN_NAME_SHORT = QtSupp
 QTC_LIB_DEPENDS += \
     extensionsystem \
     utils

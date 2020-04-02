@@ -32,6 +32,8 @@ win32 {
         RC_VERSION_STRING=\"$${QTCREATOR_DISPLAY_VERSION}\" \
         RC_COPYRIGHT=\"$$replace(COPYRIGHT, " ", "\\x20")\"
     RC_FILE = qtcreator.rc
+} else:os2 {
+    RC_FILE = qtcreator_os2.rc
 } else:macx {
     LIBS += -framework CoreFoundation
     QMAKE_ASSET_CATALOGS = $$PWD/qtcreator.xcassets

@@ -71,7 +71,7 @@ qtHaveModule(serialport) {
     warning("SerialTerminal plugin has been disabled since the Qt SerialPort module is not available.")
 }
 
-qtHaveModule(quick) {
+!os2:qtHaveModule(quick) {
     SUBDIRS += qmlprofiler perfprofiler ctfvisualizer
 } else {
     warning("QmlProfiler, PerfProfiler and CTF Visualizer plugins have been disabled since the Qt Quick module is not available.")
