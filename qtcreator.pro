@@ -12,8 +12,7 @@ TEMPLATE  = subdirs
 CONFIG   += ordered
 
 SUBDIRS = src share
-unix:!macx:!isEmpty(copydata):SUBDIRS += bin
-os2:!isEmpty(copydata):SUBDIRS += bin
+unix|os2:!macx:!isEmpty(copydata):SUBDIRS += bin
 !isEmpty(BUILD_TESTS):SUBDIRS += tests
 
 DISTFILES += dist/copyright_template.txt \

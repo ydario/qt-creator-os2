@@ -141,8 +141,7 @@ exists($$PWD/litehtml/CMakeLists.txt) {
     LITEHTML_LIB_DIR = $$LITEHTML_INSTALL_DIR/lib
     LIBS += -L$$LITEHTML_LIB_DIR -llitehtml -lgumbo
 
-    win32: PRE_TARGETDEPS += $$LITEHTML_LIB_DIR/litehtml.lib $$LITEHTML_LIB_DIR/gumbo.lib
-    else:os2: PRE_TARGETDEPS += $$LITEHTML_LIB_DIR/litehtml.lib $$LITEHTML_LIB_DIR/gumbo.lib
+    win32|os2: PRE_TARGETDEPS += $$LITEHTML_LIB_DIR/litehtml.lib $$LITEHTML_LIB_DIR/gumbo.lib
     else:unix: PRE_TARGETDEPS += $$LITEHTML_LIB_DIR/liblitehtml.a $$LITEHTML_LIB_DIR/libgumbo.a
 }
 

@@ -8,8 +8,8 @@ INCLUDEPATH += $$PWD
 
 unix:!bsd: LIBS += -ldl
 
-!os2:include(../3rdparty/sqlite/sqlite.pri)
 os2: LIBS += -lsqlite3
+else:include(../3rdparty/sqlite/sqlite.pri)
 
 SOURCES += \
     $$PWD/createtablesqlstatementbuilder.cpp \
